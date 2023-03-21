@@ -20,10 +20,20 @@ const existeUsuarioPorId = async (id)=>{
     }
 }
 
+const existeCategoriaPorId = async (req=request, res=response) => {
+    const { id } = req.params
+    const categoria = await Categoria.findById(id)
+    if (!categoria) {
+        throw new Error(`La categoría con id ${id} no existe`)
+    }
+
+}
+
 module.exports ={
     esRolValido,
     existeCorreo,
-    existeUsuarioPorId
+    existeUsuarioPorId,
+    existeCategoriaPorId
 }
 
 

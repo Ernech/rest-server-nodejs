@@ -20,7 +20,11 @@ const usuariosGet = async (req = request, res = response) => {
 const usuariosPost = async (req = request, res = response) => {
 
     const { nombre, correo, password, rol } = req.body;
-    const usuario = new Usuario({ nombre, correo, password, rol });
+    const usuario = new Usuario({
+         nombre, 
+         correo, 
+         password, 
+         rol });
     //Verificar si el correo ya existe
     const existeEmail = await Usuario.findOne({ correo });
     if (existeEmail) {
@@ -52,10 +56,13 @@ const usuariosPut = async (req = request, res = response) => {
 
 const usuariosDelete = async(req = request, res = response) => {
     const {id} = req.params;
+
+  
     //Eliminación física
     //const usuario = await Usuario.findByIdAndDelete(id);
     const usuario = await Usuario.findByIdAndUpdate(id,{estado:false});
-    res.json(usuario);
+    res.json({usuarioEliminado:usuario,usuarioAutenticado:req.usuario});
+
 };
 
 const usuariosPatch = (req = request, res = response) => {
