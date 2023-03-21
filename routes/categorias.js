@@ -12,12 +12,13 @@ const router = Router();
 
 router.get('/',obtenerCategorias)
 
-router.get('/:id',[check('id').custom(existeCategoriaPorId)],obtenerCategoriaPorId)
+router.get('/:id',[check('id','No es un id válido').isMongoId(),check('id').custom(existeCategoriaPorId),validarCampos],obtenerCategoriaPorId)
 
-router.post('/',[validarJWT,check('nombre','EL nombre es obligatorio').not().isEmpty(),validarCampos],crearCategoria)
+router.post('/',[validarJWT,check('nombre','El nombre es obligatorio').not().isEmpty(),validarCampos],crearCategoria)
 
-router.put('/:id',[validarJWT,hasRole('ADMIN_ROLE','USER_ROLE'),check('id').custom(existeCategoriaPorId)],actualizarCategoria)
+router.put('/:id',[validarJWT,check('id','No es un id válido').isMongoId(),check('id').custom(existeCategoriaPorId),
+check('nombre','El nombre es obligatorio'),validarCampos],actualizarCategoria)
 
-router.delete('/:id',[validarJWT,esAdminRol,check('id').custom(existeCategoriaPorId)],borrarCategoria)
+router.delete('/:id',[validarJWT,esAdminRol,check('id','No es un id válido').isMongoId(),check('id').custom(existeCategoriaPorId),validarCampos],borrarCategoria)
 
 module.exports = router;

@@ -6,20 +6,17 @@ const obtenerCategorias = async(req,res = response) =>{
 
     const {limite = 5, desde = 0} = req.query
 
-    const [total,categorias] = await Promise.all([Categoria.count({estado:true}),[Categoria.find({estado:true})
-        .skip(Number(limite))
-        .limit(Number(desde))]])
+    const [total,categorias] = await Promise.all([Categoria.countDocuments({estado:true}),Categoria.find({estado:true}).populate('usuario','nombre')
+        .skip(Number(desde))
+        .limit(Number(limite))])
+
     res.json({total,categorias})
 
 }
 
 const obtenerCategoriaPorId = async(req,res=response) => {
     const {id} = req.params
-    const categoria = await Categoria.findById(id)
-    if(!categoria){
-res.status(400).json({msg:'La categortía no existe'})
-    }
-
+    const categoria = await Categoria.findById(id).populate('usuario','nombre')
     res.status(201).json(categoria)
 }
 
@@ -47,8 +44,11 @@ const crearCategoria = async(req,res=response)=>{
 }
 const actualizarCategoria = async(req,res=response)=>{
     const {id} = req.params
-    const {nombre} = req.body
-    const categoriaDB = await Categoria.findByIdAndUpdate(id,nombre.toUpperCase())
+    const {estado,usuario,...data} = req.body;
+    data.nombre = data.nombre.toUpperCase()
+    data.usuario = req.usuario._id;
+
+    const categoriaDB = await Categoria.findByIdAndUpdate(id,data,{new:true})
     res.status(201).json({categoria:categoriaDB})
 
 }
