@@ -23,7 +23,7 @@ const crearProducto = async(req=request,res=response)=>{
 const obtenerProductoPorId = async(req=request,res=response)=>{
     const {id} = req.params
 
-    const producto = await Producto.findOne({_id:id,estado:true})
+    const producto = await Producto.findOne({_id:id,estado:true}).populate('usuario','nombre')
 
     res.json(producto)
 }
@@ -56,7 +56,7 @@ const eliminarProducto = async(req=request,res=response)=>{
 
     const {id} = req.params
 
-    const producto = await Producto.findByIdAndUpdate(id,{esrado:true})
+    const producto = await Producto.findByIdAndUpdate(id,{estado:false})
 
     res.json({producto})
 

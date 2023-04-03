@@ -18,11 +18,11 @@ router.get('/:id',[check('id','El id no es válido').isMongoId(),check('id').cus
 router.post('/',[validarJWT,check('nombre','El nombre es obligatorio').notEmpty(),
 check('categoria','El id no es valido').isMongoId(),check('categoria').custom(existeCategoriaPorId),validarCampos],crearProducto)
 
-router.put('/:id'[validarJWT,check('id','El id no es válido').isMongoId(),
+router.put('/:id',[validarJWT,
 check('id').custom(existeProductoPorId),check('nombre','El nombre es obligatorio').notEmpty(),validarCampos],modificarProducto)
 
-router.delete('/:id',[validarJWT,check('id','El id no es válido').isMongoId(),
-check('id').custom(existeProductoPorId),esAdminRol],eliminarProducto)
+router.delete('/:id',[validarJWT,esAdminRol,check('id','El id no es válido').isMongoId(),
+check('id').custom(existeProductoPorId)],eliminarProducto)
 
 
 module.exports=router
